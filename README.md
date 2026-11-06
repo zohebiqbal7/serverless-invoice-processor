@@ -32,6 +32,33 @@ S3 Upload → Lambda Trigger → Textract (OCR) → Bedrock (AI Analysis) → Dy
    - DynamoDB PutItem
    - CloudWatch Logs
 
+## 🤖 Automated Deployment (PowerShell)
+
+Prefer one command over the manual steps below? Use the included scripts. They pull
+your AWS account ID at runtime (nothing hardcoded) and create every resource:
+DynamoDB table, S3 buckets, IAM role, Lambda function, and the S3 trigger.
+
+```powershell
+# Deploy everything (uses your account ID as the bucket suffix)
+./deploy.ps1
+
+# Optional parameters
+./deploy.ps1 -BucketSuffix mydemo -Region us-east-1
+
+# Tear it all down when finished (prompts for confirmation)
+./teardown.ps1
+./teardown.ps1 -Force   # skip the prompt
+```
+
+**Prerequisites:** AWS CLI installed and configured (`aws configure`), PowerShell,
+and Bedrock model access to Amazon Nova Micro enabled in your Region.
+
+> **Note on Amazon Textract:** `AnalyzeExpense` requires the AWS **Paid plan**. On the
+> Free plan the stack deploys successfully, but the OCR call returns
+> `SubscriptionRequiredException`. Upgrade your plan, or swap the Textract step for a
+> Bedrock multimodal model to stay on the Free plan.
+
+---
 ## 🚀 Quick Setup
 
 ### Step 1: Create the Output S3 Bucket
@@ -117,10 +144,10 @@ Tries bucket: `textract-processed-invoices`
     'invoice_number': 'INV-12345',
     'due_date': '2024-03-15',
     'receipt_date': '2024-02-15',
-    'total': '`$1,234.56',
+    'total': '$1,234.56',
     'line_items': [
-        {'item': 'Product A', 'price': '`$100.00'},
-        {'item': 'Product B', 'price': '`$200.00'}
+        {'item': 'Product A', 'price': '$100.00'},
+        {'item': 'Product B', 'price': '$200.00'}
     ],
     'llm_analysis': 'AI-generated analysis text...'
 }
