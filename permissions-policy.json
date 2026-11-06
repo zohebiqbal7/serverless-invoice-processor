@@ -1,0 +1,35 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
+      "Resource": "arn:aws:logs:us-east-1:<YOUR_ACCOUNT_ID>:*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:HeadBucket"],
+      "Resource": [
+        "arn:aws:s3:::my-invoice-source-<YOUR_ACCOUNT_ID>/*",
+        "arn:aws:s3:::my-invoice-source-<YOUR_ACCOUNT_ID>",
+        "arn:aws:s3:::textract-ml-ai-<YOUR_ACCOUNT_ID>/*",
+        "arn:aws:s3:::textract-ml-ai-<YOUR_ACCOUNT_ID>"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "textract:AnalyzeExpense",
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "bedrock:InvokeModel",
+      "Resource": "arn:aws:bedrock:*::foundation-model/amazon.nova-micro-v1:0"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "dynamodb:PutItem",
+      "Resource": "arn:aws:dynamodb:us-east-1:<YOUR_ACCOUNT_ID>:table/invoices"
+    }
+  ]
+}

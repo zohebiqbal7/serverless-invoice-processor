@@ -1,0 +1,19 @@
+# Build artifacts
+function.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Course / lab notes (not part of the project)
+ReadersAreTheLeaders.rtf
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local env / secrets
+*.env
+.env
