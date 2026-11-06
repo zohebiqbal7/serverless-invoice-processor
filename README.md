@@ -69,7 +69,23 @@ DynamoDB table, S3 buckets, IAM role, Lambda function, and the S3 trigger.
 ./deploy/teardown.ps1 -Force   # skip the prompt
 ```
 
-**Prerequisites:** AWS CLI installed and configured (`aws configure`), PowerShell,
+**macOS / Linux (bash):**
+
+```bash
+# Deploy everything
+./deploy/deploy.sh
+
+# Optional parameters (environment variables)
+REGION=us-east-1 BUCKET_SUFFIX=mydemo ./deploy/deploy.sh
+
+# Tear it all down when finished (prompts for confirmation)
+./deploy/teardown.sh
+FORCE=1 ./deploy/teardown.sh   # skip the prompt
+```
+
+Make the bash scripts executable first: `chmod +x deploy/*.sh`
+
+**Prerequisites:** AWS CLI installed and configured (`aws configure`), PowerShell or Bash,
 and Bedrock model access to Amazon Nova Micro enabled in your Region.
 
 > **Note on Amazon Textract:** `AnalyzeExpense` requires the AWS **Paid plan**. On the

@@ -17,3 +17,6 @@ venv/
 # Local env / secrets
 *.env
 .env
+
+# Local social-preview banner generator (not part of the project)
+social-preview.html
