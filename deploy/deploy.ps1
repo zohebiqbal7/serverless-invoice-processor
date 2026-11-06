@@ -29,6 +29,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 Set-Location -Path $PSScriptRoot
+$ProjectRoot = Split-Path -Parent $PSScriptRoot  # repo root (one level up from deploy/)
 
 Write-Host "==> Resolving AWS account..." -ForegroundColor Cyan
 $AccountId = (aws sts get-caller-identity --query Account --output text).Trim()
@@ -108,8 +109,8 @@ Start-Sleep -Seconds 10
 
 # ---------------------------------------------------------------------------
 Write-Host "`n==> [4/6] Packaging + deploying Lambda '$FunctionName'..." -ForegroundColor Cyan
-$zip = Join-Path $PSScriptRoot "function.zip"
-Compress-Archive -Path (Join-Path $PSScriptRoot "lambda_function.py") -DestinationPath $zip -Force
+$zip = Join-Path $ProjectRoot "function.zip"
+Compress-Archive -Path (Join-Path $ProjectRoot "lambda_function.py") -DestinationPath $zip -Force
 $fnExists = aws lambda get-function --function-name $FunctionName --region $Region 2>$null
 if ($LASTEXITCODE -ne 0) {
     aws lambda create-function --function-name $FunctionName --runtime python3.12 `

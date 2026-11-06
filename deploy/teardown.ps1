@@ -22,6 +22,7 @@ param(
 
 $ErrorActionPreference = "Continue"
 Set-Location -Path $PSScriptRoot
+$ProjectRoot = Split-Path -Parent $PSScriptRoot  # repo root (one level up from deploy/)
 
 $AccountId = (aws sts get-caller-identity --query Account --output text).Trim()
 if (-not $AccountId) { throw "Could not resolve AWS account. Are your credentials configured?" }
@@ -71,7 +72,7 @@ aws dynamodb delete-table --table-name $TableName --region $Region 2>$null | Out
 if ($LASTEXITCODE -eq 0) { Write-Host "    Delete requested." -ForegroundColor Green } else { Write-Host "    Not found, skipping." -ForegroundColor Yellow }
 
 # Clean local build artifact
-Remove-Item (Join-Path $PSScriptRoot "function.zip") -ErrorAction SilentlyContinue
+Remove-Item (Join-Path $ProjectRoot "function.zip") -ErrorAction SilentlyContinue
 
 Write-Host "`n==================================================" -ForegroundColor Green
 Write-Host " Teardown complete." -ForegroundColor Green

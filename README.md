@@ -5,9 +5,28 @@ Automated invoice processing using AWS Textract, Bedrock AI, and DynamoDB.
 ## 🏗️ Architecture
 
 ```
-S3 Upload → Lambda Trigger → Textract (OCR) → Bedrock (AI Analysis) → DynamoDB Storage
-                                    ↓
-                            S3 (Processed Text Backup)
+                        +---------------------------+
+   Invoice upload  -->  |   S3 (source bucket)      |
+   (PDF / PNG / JPG)    +------------+--------------+
+                                     | s3:ObjectCreated
+                                     v
+                        +---------------------------+
+                        |   AWS Lambda              |
+                        |   (invoice-processor)     |
+                        +------------+--------------+
+                                     |
+          +--------------------------+--------------------------+
+          v                          v                          v
+  +----------------+        +------------------+       +------------------+
+  | Amazon Textract|        | Amazon Bedrock   |       | Amazon DynamoDB  |
+  | AnalyzeExpense |  -->   | Nova Micro        |  -->  | invoices table   |
+  | (OCR)          |        | (AI analysis)    |       | (structured data)|
+  +----------------+        +------------------+       +------------------+
+          |
+          v
+  +----------------------------+
+  | S3 (processed-text backup) |
+  +----------------------------+
 ```
 
 ## 📋 Prerequisites
@@ -40,14 +59,14 @@ DynamoDB table, S3 buckets, IAM role, Lambda function, and the S3 trigger.
 
 ```powershell
 # Deploy everything (uses your account ID as the bucket suffix)
-./deploy.ps1
+./deploy/deploy.ps1
 
 # Optional parameters
-./deploy.ps1 -BucketSuffix mydemo -Region us-east-1
+./deploy/deploy.ps1 -BucketSuffix mydemo -Region us-east-1
 
 # Tear it all down when finished (prompts for confirmation)
-./teardown.ps1
-./teardown.ps1 -Force   # skip the prompt
+./deploy/teardown.ps1
+./deploy/teardown.ps1 -Force   # skip the prompt
 ```
 
 **Prerequisites:** AWS CLI installed and configured (`aws configure`), PowerShell,
@@ -266,4 +285,4 @@ If you encounter issues:
 
 ## 📄 License
 
-This project is provided as-is for educational purposes.
+Released under the MIT License - see the [LICENSE](LICENSE) file for details.
